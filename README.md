@@ -22,7 +22,7 @@ GKE clusters with exposed `kube-env` attributes files via the metadata API URL a
 
 Accessing the `kube-env` file can occur via the UI/gcloud if the user has "compute.instances.get" IAM permissions or if the metadata API is not blocked from being accessed by pods.  In practice, this is commonly accessible to many users in a GCP Project that aren't meant to be cluster "admins".
 
-Accessing the `kube-env` attributes attached to the GCE instances acting as GKE worker nodes via curl:
+Accessing the `kube-env` attributes attached to the GCE instances acting as GKE worker nodes via curl from inside a running pod:
 
 ```bash
 curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/attributes/kube-env
@@ -74,4 +74,6 @@ If you have `cluster-admin` permissions, you can _carefully_ list and delete the
 
 ## References
 
-Coincidentally, this "exploit" was being worked on /the same week/ as [https://www.4armed.com/blog/hacking-kubelet-on-gke/](https://www.4armed.com/blog/hacking-kubelet-on-gke/) wrote this great write-up (right before KubeCon 2018 NA), but I didn't want to release it immediately to allow for better GKE defaults/options to be available.  Now that Workload Identity is available and deprecates/incorporates the Metadata Concealment Proxy and several months have passed, the prevention mechanisms are readily available.
+Coincidentally, this "exploit" script was being worked on /the same week/ as [https://www.4armed.com/blog/hacking-kubelet-on-gke/](https://www.4armed.com/blog/hacking-kubelet-on-gke/) wrote this great write-up (right before KubeCon 2018 NA) unbeknownst to me.  That said, I didn't want to release it immediately to allow for better GKE defaults/options to be available.  Now that Workload Identity is available and deprecates/incorporates the Metadata Concealment Proxy and several months have passed, the prevention mechanisms are readily available.
+
+To see the more about real-world attacks that leveraged the metadata to escalate privileges inside a GKE cluster, watch [Shopify’s $25k Bug Report, and the Cluster Takeover That Didn’t Happen - Greg Castle and Shane Lawrence](https://www.youtube.com/watch?v=2XCm7vveU5A).
