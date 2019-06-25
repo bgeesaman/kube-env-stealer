@@ -12,7 +12,7 @@ spec:
       # If metadata proxy is running and you have no PSP
       # preventing this setting, uncomment to run on the
       # underlying node's network namespace to bypass it.
-      # hostNetwork:true
+      # hostNetwork: true
       containers:
       - name: evil-pod
         image: nginx:latest
