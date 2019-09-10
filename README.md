@@ -4,9 +4,11 @@
 
 If you can run a pod in GKE and the cluster isn't running [Metadata Concealment](https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata) or the newer implementation of [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity), you have a really good chance at becoming `cluster-admin` in under a minute.
 
+Also, this can be done with just `compute.instances.get` and access to that cluster's GKE API. See the variant in the `compute.instances.get` folder of this repo.
+
 DISCLAIMER: Only perform this on clusters you own and operate or are authorized to assess.  This code is presented "as-is" without warranty fit for a particular purpose.  Read the code and understand what it's doing before using.
 
-Steps:
+Steps for the in-GKE approach:
 
 - Clone this repo.
 - Thoroughly read the code and understand what it's doing first.
@@ -15,6 +17,18 @@ Steps:
 - Run `./auto-exploit.sh`
 - After 15-30 seconds, examine the contents of `cluster.tar`.
 - Leverage the service account token JWTs for service accounts with higher permissions via kubectl.
+
+Steps for the outside-of-GKE approach:
+
+- Clone this repo.
+- Thoroughly read the code and understand what it's doing first.
+- `gcloud curl awk sed grep base64 openssl kubectl` installed locally (no kubeconfig needed)
+- Use gcloud to obtain a gke worker node instance name, project, and zone/region.  Typically need `compute.instances.list` for this.
+- Ensure you have the ability to access the GKE API of the cluster in that project via layer4 (no credentials needed).
+- `cd `compute.instances.get`
+- Run `./gce-gke-kubelet-csr-secret-extractor.sh`
+- After 15-30 seconds, examine the contents of current directory.
+- Leverage the service account token JWTs for service accounts with higher permissions via `kubectl --token`.
 
 ## Background
 
